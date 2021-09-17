@@ -54,12 +54,10 @@ class ViewController: UIViewController {
             selector: #selector(self.updateGraph),
             userInfo: nil,
             repeats: true)
-       
-        
     }
     
-    func viewWillDisappear() {
-        print("now out!")
+    //when view disappeared, call this 
+    override func viewDidDisappear(_ animated: Bool) {
         audio.pause()
     }
     

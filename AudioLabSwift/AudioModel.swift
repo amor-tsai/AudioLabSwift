@@ -53,6 +53,7 @@ class AudioModel {
         if let manager = self.audioManager{
             manager.play()
         }
+        print("it's playing")
     }
     
     // call this when you want the audio to pause being handled by this model
@@ -60,6 +61,7 @@ class AudioModel {
         if let manager = self.audioManager{
             manager.pause()
         }
+        print("it stops playing")
     }
     
     //==========================================
