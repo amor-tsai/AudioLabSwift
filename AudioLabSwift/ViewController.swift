@@ -46,7 +46,11 @@ class ViewController: UIViewController {
         
         // start up the audio model here, querying microphone
         audio.startMicrophoneProcessing(withFps: 10)
-
+        
+        //load the audio file
+        audio.startAudioPlayProcessing()
+        
+        //play the audio
         audio.play()
         
         // run the loop for updating the graph peridocially
@@ -54,6 +58,11 @@ class ViewController: UIViewController {
             selector: #selector(self.updateGraph),
             userInfo: nil,
             repeats: true)
+        
+        
+        //test
+//        let arr = [2,-3,4,11,7,-1]
+//        print(arr[2...3])
     }
     
     //when view disappeared, call this 

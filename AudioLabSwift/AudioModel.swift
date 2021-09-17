@@ -36,8 +36,7 @@ class AudioModel {
     func startMicrophoneProcessing(withFps:Double){
         // setup the microphone to copy to circualr buffer
         if let manager = self.audioManager{
-//            manager.inputBlock = self.handleMicrophone
-            manager.inputBlock = self.handleSpeakerQueryWithAudioFile
+            manager.inputBlock = self.handleMicrophone
             
             // repeat this fps times per second using the timer class
             //   every time this is called, we update the arrays "timeData" and "fftData"
@@ -48,9 +47,11 @@ class AudioModel {
         }
     }
     
-    
-    
-    
+    func startAudioPlayProcessing() {
+        if let manager = self.audioManager{
+            manager.outputBlock = self.handleSpeakerQueryWithAudioFile
+        }
+    }
     
     // You must call this when you want the audio to start being handled by our model
     func play(){
@@ -126,14 +127,14 @@ class AudioModel {
             //calculate the values of this new array by looping through the FFT magnitude array to take maxima of windows
             
             for i in 0..<fft20Count {
-                let arraySlice = fftData[i*stride..<(i+1)*stride]
-                let tempArr = Array(arraySlice)
-                let tempMax = vDSP.maximum(tempArr)
-                fft20MaximumData[i] = tempMax
+//                let arraySlice = fftData[i*stride..<(i+1)*stride]
+//                let tempArr = Array(arraySlice)
+//                let tempMax = vDSP.maximum(tempArr)
+//                fft20MaximumData[i] = tempMax
+                
+                vDSP_maxv(Array(fftData[i*stride..<(i+1)*stride]), 1, &fft20MaximumData[i], vDSP_Length(self.stride))
+                
             }
-            
-//            print(fft20MaximumData)
-            //
             
 
         }
