@@ -65,11 +65,13 @@ class ViewController: UIViewController {
 //        print(arr[2...3])
     }
     
-    //when view disappeared, call this 
+    //when view will disappeare, call this
+    // I think use this function is more appropriate than viewWillDisappear because it stops when I abosultely leave the view instead of trying to .
     override func viewDidDisappear(_ animated: Bool) {
         audio.pause()
     }
     
+
     // periodically, update the graph with refreshed FFT Data
     @objc
     func updateGraph(){
