@@ -17,13 +17,19 @@ class AudioModel {
     // the user can access these arrays at any time and plot them if they like
     var timeData:[Float]
     var fftData:[Float]
+    var fft20MaximumData:[Float]
+    var stride:Int
+    var fft20Count:Int
     
     // MARK: Public Methods
-    init(buffer_size:Int) {
+    init(buffer_size:Int,fft20:Int) {
         BUFFER_SIZE = buffer_size
         // anything not lazily instatntiated should be allocated here
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
         fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE/2)
+        fft20MaximumData = Array.init(repeating: 0.0, count: 20)
+        fft20Count = fft20
+        stride = fftData.count/fft20Count
     }
     
     // public function for starting processing of microphone data
@@ -49,6 +55,12 @@ class AudioModel {
         }
     }
     
+    // call this when you want the audio to pause being handled by this model
+    func pause(){
+        if let manager = self.audioManager{
+            manager.pause()
+        }
+    }
     
     //==========================================
     // MARK: Private Properties
@@ -89,6 +101,20 @@ class AudioModel {
             //   fftData:  the FFT of those same samples
             // the user can now use these variables however they like
             
+            
+            //calculate the values of this new array by looping through the FFT magnitude array to take maxima of windows
+            
+            for i in 0..<fft20Count {
+                let arraySlice = fftData[i*stride..<(i+1)*stride]
+                let tempArr = Array(arraySlice)
+                let tempMax = vDSP.maximum(tempArr)
+                fft20MaximumData[i] = tempMax
+            }
+            
+//            print(fft20MaximumData)
+            //
+            
+
         }
     }
     
