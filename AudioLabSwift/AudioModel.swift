@@ -36,7 +36,8 @@ class AudioModel {
     func startMicrophoneProcessing(withFps:Double){
         // setup the microphone to copy to circualr buffer
         if let manager = self.audioManager{
-            manager.inputBlock = self.handleMicrophone
+//            manager.inputBlock = self.handleMicrophone
+            manager.inputBlock = self.handleSpeakerQueryWithAudioFile(data:numFrames:numChannels:)
             
             // repeat this fps times per second using the timer class
             //   every time this is called, we update the arrays "timeData" and "fftData"
@@ -46,6 +47,9 @@ class AudioModel {
                                  repeats: true)
         }
     }
+    
+    
+    
     
     
     // You must call this when you want the audio to start being handled by our model
@@ -78,6 +82,21 @@ class AudioModel {
     private lazy var inputBuffer:CircularBuffer? = {
         return CircularBuffer.init(numChannels: Int64(self.audioManager!.numInputChannels),
                                    andBufferSize: Int64(BUFFER_SIZE))
+    }()
+    
+    //to load mp3 file
+    private lazy var fileReader:AudioFileReader? = {
+        if let url = Bundle.main.url(forResource: "satisfaction", withExtension: "mp3"){
+            var tmpFileReader:AudioFileReader? = AudioFileReader.init(audioFileURL: url,
+                                                                        samplingRate: Float(audioManager!.samplingRate),
+                                                                        numChannels: audioManager!.numOutputChannels)
+            tmpFileReader!.currentTime = 0.0
+            print("Audio file succesfully loaded for \(url)")
+            return tmpFileReader
+        }else {
+            print("Audio file failed to load")
+            return nil
+        }
     }()
     
     
@@ -129,5 +148,10 @@ class AudioModel {
         self.inputBuffer?.addNewFloatData(data, withNumSamples: Int64(numFrames))
     }
     
+    private func handleSpeakerQueryWithAudioFile(data:Optional<UnsafeMutablePointer<Float>>, numFrames:UInt32, numChannels: UInt32) {
+        if let file = self.fileReader {
+            file.retrieveFreshAudio(data, numFrames: numFrames, numChannels: numChannels)
+        }
+    }
     
 }
