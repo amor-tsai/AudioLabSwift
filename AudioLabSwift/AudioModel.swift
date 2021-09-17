@@ -37,7 +37,7 @@ class AudioModel {
         // setup the microphone to copy to circualr buffer
         if let manager = self.audioManager{
 //            manager.inputBlock = self.handleMicrophone
-            manager.inputBlock = self.handleSpeakerQueryWithAudioFile(data:numFrames:numChannels:)
+            manager.inputBlock = self.handleSpeakerQueryWithAudioFile
             
             // repeat this fps times per second using the timer class
             //   every time this is called, we update the arrays "timeData" and "fftData"
